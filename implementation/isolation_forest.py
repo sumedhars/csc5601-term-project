@@ -33,3 +33,39 @@ class IsolationForest:
             self.forest.append(tree)
         # output is forest (in self.forest list)    
         return self
+    
+
+    def anomaly_score(self, x):
+        """
+        Implements Equation 2 from the paper:
+        In the evaluating stage, an anomaly score s is derived from the expected path length E(h(x)) 
+        for each test instance. 
+        When h(x) is obtained for each tree of the ensemble, an anomaly score is produced 
+        by computing s(x, ψ) in Equation 2 (!!)
+        """
+        avg_path_length = self.average_path_length(x)
+        c_subsampling = self.c_func(self.sub_sampling_size)
+        anomaly_score = 2 ** (-avg_path_length/c_subsampling)
+        return anomaly_score
+
+
+    def average_path_length(self, x):
+        """
+        from the paper:
+        E(h(x)) are derived by passing instances through each iTree in an iForest
+        E(h(x)) is the average of h(x) from a collection of isolation trees.
+        """
+        total_path_length = sum(tree.path_length(x) for tree in self.forest)
+        return total_path_length / len(self.forest)
+
+
+    def c_func(self, size):
+        """
+        implements Equation 1 from the paper:
+        Given a data set of n instances, the average path length of unsuccessful search in BST
+        """
+        if size <= 1:
+            return 0
+        else:
+            c = (2 * (np.log(size - 1) + np.euler_gamma)) - (2 * (size - 1) / size)
+            return c
