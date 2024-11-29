@@ -4,12 +4,15 @@ import scipy as sc
 from isolation_tree import IsolationTree
 
 class IsolationForest:
-    # implements Algorithm 1: iForest from original Isolation Forest paper
+    """
+    implements Algorithm 1: iForest from original Isolation Forest paper
+    """
 
     def __init__(self, t, sub_sampling_size):
         self.t = t # number of trees
         self.sub_sampling_size = sub_sampling_size # sub sampling size ψ
         self.forest = None
+
 
     def fit(self, X:np.array):
         # initialize forest - stores isolation trees
@@ -24,7 +27,7 @@ class IsolationForest:
             else:
                 X_subsample = X  # if subsample size > data size, use all data
             # Forest ← Forest ∪ iTree(X', 0, l)
-            # Build an IsolationTree with X' ss the inputdata, starting height = 0, and height limit = l
+            # Build an IsolationTree with X' as the inputdata, starting height = 0, and height limit = l
             # then add the IsolationTree to the forest
             tree = IsolationTree(e=0, limit=self.limit).fit(X_subsample)
             self.forest.append(tree)

@@ -2,7 +2,9 @@ import numpy as np
 import scipy as sc
 
 class IsolationTree:
-    # implements Algorithm 2: iTree from original Isolation Forest paper
+    """
+    implements Algorithm 2: iTree from original Isolation Forest paper
+    """
 
     def __init__(self, e, limit):
         self.e = e # current tree height
@@ -42,16 +44,57 @@ class IsolationTree:
             # output: an iTree
             return self
 
+
     def randomly_select_attribute(self, X):
         # X is data
         # randomly select an attribute (column index) from data
         return np.random.randint(0, X.shape[1])
 
+
     def randomly_select_split_point(self, attribute_q_data):
-        # randomly select a split point p from max and min values of attribute q in X
-        # attribute_q_data -> 1D array of values for randomly selected attribute q
-        # retruns a randomly selected split point
+        """
+        randomly select a split point p from max and min values of attribute q in X
+        :param attribute_q_data: 1D array of values for randomly selected attribute q
+        :return: a randomly selected split point
+        """
         min_value = attribute_q_data.min()
         max_value = attribute_q_data.max()
         split_point = np.random.uniform(min_value, max_value)
         return split_point
+    
+
+    def path_length(self, x, e):
+        """
+        Implements Algorithm 3 from the paper:
+        Using PathLength function, a single path length h(x) is derived by counting the 
+        number of edges e from the root node to a terminating node as instance x traverses through an iTree
+
+        :param x: an instance to evaluate (1D array of feature values) - test data point
+        :param e: - current path length; to be initialized to zero when first called
+        :return: single path length h(x)
+        """
+        # T is an external node when both right subtree and left subtree are None
+        if self.left_subtree == None and self.right_subtree == None:
+            # e + c(T.size)
+            return e + self.c_func(self.size)
+        # a ← T.splitAtt
+        a = self.attribute_q
+        # x_a is o the value of the attribute (or feature) a of the instance x
+        if x[a] < self.split_point_p:
+            # PathLength(x, T.left, e + 1)
+            return self.left_subtree.path_length(x, e + 1)
+        else: 
+            # PathLength(x, T.right, e + 1)
+            return self.right_subtree.path_length(x, e + 1)
+
+
+    def c_func(self, size):
+        """
+        implements Equation 1 from the paper:
+        Given a data set of n instances, the average path length of unsuccessful search in BST
+        """
+        if size <= 1:
+            return 0
+        else:
+            c = (2 * (np.log(size - 1) + np.euler_gamma)) - (2 * (size - 1) / size)
+            return c
