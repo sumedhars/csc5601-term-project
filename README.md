@@ -4,11 +4,12 @@
 ### Project Approach:
 - Data Prep: Input a dataset with $n$ samples and $d$ features. Normalize + handle missing values/remove duplicates
 - Implement Isolation Forest from scratch - building and interpreting isolation trees.
+    - Add complexity analysis and optimization decisions in the implementation
 - Compare with `sklearn.ensemble.IsolationForest`, discuss how random partitioning impacts runtime and prediction speed.
 - Evaluate with performance metrics like the F1-score and AUC-ROC.
 
 
-#### Steps taken to build Isolation Forest algorithm from scratch, based on original paper
+### Steps taken to build Isolation Forest algorithm from scratch, based on original paper
 
 **Step 1: Build a single isolation tree**:
 
@@ -49,6 +50,14 @@ $$c(n)=2H(n−1) − \frac{2(n−1)}{n}$$
 **Step 6: Threshold for Anomaly Detection**
 
 Decide a threshold $τ$ for anomaly scores to classify data points as anomalies or normal instances.
+
+
+**Step 7: Optimization Additions**
+
+- improve representation for imbalanced datasets, 
+- better split decisions for better tree balance
+- better efficiency with feature subsampling
+- TODO: add details
 
 ### Sources:
 - https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf?q=isolation-forest
