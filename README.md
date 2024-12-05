@@ -54,9 +54,12 @@ Decide a threshold $τ$ for anomaly scores to classify data points as anomalies 
 
 **Step 7: Optimization Additions**
 
-- improve representation for imbalanced datasets, 
+- improve representation for imbalanced datasets
+    - done with adding `stratify` parameter in `IsolationForest` implementaion: By passing `stratify_labels`, the `stratified_sample` method will make sure that each subsample contains approximately the same proportion of fraud and non-fraud cases as the entire dataset.
 - better split decisions for better tree balance
 - better efficiency with feature subsampling
+    - if there are many features, it doesn't make sense to evaluate all of them at every node
+    - add `max_features` paramter to restrict the selection to a limited number of features
 - TODO: add details
 
 ### Sources:
